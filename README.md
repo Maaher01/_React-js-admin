@@ -8,7 +8,7 @@
 
 ## Quick start
 
-- [Download from Github](https://github.com/minimal-ui-kit/material-kit-react/archive/refs/heads/main.zip) or clone the repo : `git clone https://github.com/siampathan/GTCL_Admin.git`
+- [Download from Github](https://github.com/minimal-ui-kit/material-kit-react/archive/refs/heads/main.zip) or clone the repo : `git clone https://github.com/Maaher01/_Node-js-admin.git`
 - Recommended `Node.js v20.x`.
 - **Install:** `yarn install or npm install`
 - **Start:** `yarn dev or npm run dev`
@@ -16,4 +16,4 @@
 
 ## Contact us
 
-Email: siampathan005@gmail.com
+Email: maaher1145@gmail.com
