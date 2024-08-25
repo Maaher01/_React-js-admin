@@ -47,6 +47,7 @@ const StyledForm = styled('form')(formStyles);
 
 export default function ContentUpdateView() {
   const { id } = useParams();
+
   const [values, setValues] = useState({
     menu: '',
     heading: '',

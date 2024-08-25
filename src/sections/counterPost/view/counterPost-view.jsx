@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { styled } from '@mui/system';
@@ -10,8 +10,8 @@ import {
   MenuItem,
   Container,
   TextField,
-  Typography,
   InputLabel,
+  Typography,
   FormControl,
 } from '@mui/material';
 
@@ -44,48 +44,30 @@ const formStyles = {
 const StyledForm = styled('form')(formStyles);
 
 export default function CounterPostView() {
-  const [menu, setMenu] = useState('');
-  const [menuItems, setMenuItems] = useState([]);
   const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+  const [amount, setAmount] = useState('');
   const [file, setFile] = useState(null);
+  const [status, setStatus] = useState(1);
 
   const navigate = useNavigate();
-
-  const handleMenu = (e) => {
-    setMenu(e.target.value);
-  };
-
-  useEffect(() => {
-    getMenu();
-  }, []);
-
-  const getMenu = async () => {
-    try {
-      const response = await axios.get(`${API_Link}menu`);
-      setMenuItems(response.data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const formateData = new FormData();
+      const formData = new FormData();
 
-      formateData.append('menu', menu);
-      formateData.append('title', title);
-      formateData.append('description', description);
-      formateData.append('file', file);
+      formData.append('title', title);
+      formData.append('amount', amount);
+      formData.append('file', file);
+      formData.append('status', status);
 
-      await axios.post(`${API_Link}clients`, formateData, {
+      await axios.post(`${API_Link}counter`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
-      navigate('/client');
+      navigate('/counter');
     } catch (err) {
       console.error('Got an Error !', err);
     }
@@ -96,28 +78,8 @@ export default function CounterPostView() {
       <StyledPaper sx={paperStyles}>
         <StyledForm sx={formStyles} onSubmit={handleSubmit}>
           <Typography variant="h3" gutterBottom>
-            Create Clients Info
+            Create Counter
           </Typography>
-
-          <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Menu</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={menu}
-              label="Menu"
-              onChange={handleMenu}
-            >
-              <MenuItem value="Select" key={0}>
-                Select
-              </MenuItem>
-              {menuItems.map((item) => (
-                <MenuItem key={item.id} value={item.id}>
-                  {item.menu}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
 
           <TextField
             label="Title"
@@ -129,11 +91,11 @@ export default function CounterPostView() {
             margin="normal"
           />
           <TextField
-            label="Description"
+            label="Amount"
             type="text"
-            placeholder="Enter Description"
+            placeholder="Enter Amount"
             variant="outlined"
-            onChange={(e) => setDescription(e.target.value)}
+            onChange={(e) => setAmount(e.target.value)}
             fullWidth
             margin="normal"
           />
@@ -144,6 +106,19 @@ export default function CounterPostView() {
             fullWidth
             margin="normal"
           />
+          <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label">Active</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={status}
+              label="Active"
+              onChange={(e) => setStatus(e.target.value)}
+            >
+              <MenuItem value={1}>Active</MenuItem>
+              <MenuItem value={0}>Inactive</MenuItem>
+            </Select>
+          </FormControl>
           <Button type="submit" variant="contained" color="success">
             Submit
           </Button>

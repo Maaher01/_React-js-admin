@@ -21,30 +21,20 @@ import { API_Link } from 'src/components/api/api';
 
 export default function CounterInfoView() {
   const [items, setItems] = useState([]);
-  // const [menus, setMenus] = useState([]);
 
   useEffect(() => {
     getItems();
-    // getMenus();
   }, []);
 
   const getItems = async () => {
-    const response = await axios.get(`${API_Link}clients`);
-    setItems(response.data.rows);
+    const response = await axios.get(`${API_Link}counter`);
+    console.log(response);
+    setItems(response.data);
   };
-
-  // const getMenus = async () => {
-  //   const response = await axios.get(`${API_Link}menu`);
-  //   const menuData = response.data.reduce((acc, menu) => {
-  //     acc[menu.id] = menu.menu;
-  //     return acc;
-  //   }, {});
-  //   setMenus(menuData);
-  // };
 
   const deleteItems = async (id) => {
     try {
-      await axios.delete(`${API_Link}clients/${id}`);
+      await axios.delete(`${API_Link}counter/${id}`);
       getItems();
     } catch (err) {
       console.log(err);
@@ -54,35 +44,34 @@ export default function CounterInfoView() {
   return (
     <Container maxWidth="xl">
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-        <Typography variant="h4">All Clients</Typography>
+        <Typography variant="h4">All Counters</Typography>
 
         <Button
           component={Link}
-          to="/client-create"
+          to="/counter-create"
           variant="contained"
           color="inherit"
           startIcon={<Iconify icon="eva:plus-fill" />}
         >
-          Add Client
+          Add Counter
         </Button>
       </Stack>
       <Paper>
         <Table sx={{ boxShadow: 3, borderRadius: '15px' }}>
           <TableHead>
             <TableRow>
-              {/* <TableCell>Menu</TableCell> */}
-              <TableCell> Title </TableCell>
-              <TableCell> Description </TableCell>
-              <TableCell>Image</TableCell>
+              <TableCell>Title</TableCell>
+              <TableCell>Amount</TableCell>
+              <TableCell>Logo</TableCell>
+              <TableCell>Status</TableCell>
               <TableCell>Action</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {items?.map((item) => (
               <TableRow key={item.id}>
-                {/* <TableCell> {menus[item.menu] || item.menu} </TableCell> */}
                 <TableCell>{item.title}</TableCell>
-                <TableCell> {item.description} </TableCell>
+                <TableCell> {item.amount} </TableCell>
                 <TableCell>
                   <Avatar
                     alty="Icon"
@@ -90,10 +79,11 @@ export default function CounterInfoView() {
                     style={{ width: '100px', height: '90px', borderRadius: '10px' }}
                   />
                 </TableCell>
+                <TableCell> {item.status === 1 ? 'Active' : 'Inactive'} </TableCell>
                 <TableCell>
                   <Button
                     component={Link}
-                    to={`/client-update/${item.id}`}
+                    to={`/counter-update/${item.id}`}
                     variant="contained"
                     color="primary"
                     style={{
@@ -102,6 +92,7 @@ export default function CounterInfoView() {
                     }}
                     startIcon={<Iconify icon="mdi:edit" />}
                   />
+
                   <Button
                     component={Link}
                     sx={{ ml: 1 }}

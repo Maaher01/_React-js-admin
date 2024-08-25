@@ -46,48 +46,37 @@ const StyledForm = styled('form')(formStyles);
 export default function CounterUpdateView() {
   const { id } = useParams();
   const [values, setValues] = useState({
-    menu: '',
     title: '',
-    description: '',
+    amount: '',
     file: null,
+    status: '',
   });
 
-  const [menuItems, setMenuItems] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${API_Link}clients/${id}`);
+        const response = await axios.get(`${API_Link}counter/${id}`);
         setValues(response.data);
       } catch (err) {
         console.error('Got an Error ', err);
       }
     };
     fetchData();
-    getMenu();
   }, [id]);
-
-  const getMenu = async () => {
-    try {
-      const response = await axios.get(`${API_Link}menu`);
-      setMenuItems(response.data);
-    } catch (err) {
-      console.error('Get an Error ', err);
-    }
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
       const updateValues = values;
-      await axios.patch(`${API_Link}clients/${id}`, updateValues, {
+      await axios.patch(`${API_Link}counter/${id}`, updateValues, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
-      navigate('/client');
+      navigate('/counter');
     } catch (err) {
       console.error('Get an Error ', err);
     }
@@ -98,24 +87,8 @@ export default function CounterUpdateView() {
       <StyledPaper sx={paperStyles}>
         <StyledForm sx={formStyles} onSubmit={handleSubmit}>
           <Typography variant="h3" gutterBottom>
-            Update Clients Info
+            Update Counter Info
           </Typography>
-          <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Menu</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={values.menu}
-              label="Menu"
-              onChange={(e) => setValues({ ...values, menu: e.target.value })}
-            >
-              {menuItems.map((item) => (
-                <MenuItem key={item.id} value={item.id}>
-                  {item.menu}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
           <TextField
             label="Title"
             type="text"
@@ -126,11 +99,11 @@ export default function CounterUpdateView() {
             margin="normal"
           />
           <TextField
-            label="Sub Title"
+            label="Amount"
             type="text"
             variant="outlined"
-            value={values.description}
-            onChange={(e) => setValues({ ...values, description: e.target.value })}
+            value={values.amount}
+            onChange={(e) => setValues({ ...values, amount: e.target.value })}
             fullWidth
             margin="normal"
           />
@@ -142,6 +115,19 @@ export default function CounterUpdateView() {
             fullWidth
             margin="normal"
           />
+          <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label">Active</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={values.status}
+              label="Status"
+              onChange={(e) => setValues({ ...values, status: e.target.value })}
+            >
+              <MenuItem value={1}>Active</MenuItem>
+              <MenuItem value={0}>Inactive</MenuItem>
+            </Select>
+          </FormControl>
           <Button type="submit" variant="contained" color="success">
             Update
           </Button>

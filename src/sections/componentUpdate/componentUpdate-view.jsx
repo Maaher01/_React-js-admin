@@ -49,10 +49,6 @@ const StyledForm = styled('form')(formStyles);
 
 export default function ComponentUpdate() {
   const { id } = useParams();
-  const [menuItems, setMenuItems] = useState([]);
-  const [selectedMenu, setSelectedMenu] = useState('');
-  const [contentItems, setContentItems] = useState([]);
-  const [selectedContent, setSelectedContent] = useState('');
   const [values, setValues] = useState({
     menu: '',
     content: '',
@@ -68,12 +64,19 @@ export default function ComponentUpdate() {
     status: '',
   });
 
+  const [menuItems, setMenuItems] = useState([]);
+  const [selectedMenu, setSelectedMenu] = useState('');
+  const [contentItems, setContentItems] = useState([]);
+  const [selectedContent, setSelectedContent] = useState('');
+
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(`${API_Link}component/${id}`);
+        console.log(response.data);
+
         setValues(response.data);
         setSelectedMenu(response.data.menu);
         fetchContentItems(response.data.menu);
@@ -148,6 +151,20 @@ export default function ComponentUpdate() {
     } catch (err) {
       console.error('Get an Error ', err);
     }
+  };
+
+  const modules = {
+    toolbar: [
+      [{ header: [1, 2, 3, 4, 5, 6, false] }],
+      [{ font: [] }],
+      [{ size: [] }],
+      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+      [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
+      [{ align: [] }],
+      ['link', 'image', 'video'],
+      ['clean'],
+      [{ color: [] }, { background: [] }],
+    ],
   };
 
   return (
@@ -238,26 +255,7 @@ export default function ComponentUpdate() {
             theme="snow"
             value={values.description}
             onChange={handleDescription}
-            modules={{
-              toolbar: [
-                ['bold', 'italic', 'underline', 'strike'],
-                ['blockquote', 'code-block'],
-
-                [{ list: 'ordered' }, { list: 'bullet' }],
-                [{ script: 'sub' }, { script: 'super' }],
-                [{ indent: '-1' }, { indent: '+1' }],
-                [{ direction: 'rtl' }],
-
-                [{ size: ['small', false, 'large', 'huge'] }],
-                [{ header: [1, 2, 3, 4, 5, 6, false] }],
-
-                [{ color: [] }, { background: [] }],
-                [{ font: [] }],
-                [{ align: [] }],
-
-                ['clean'],
-              ],
-            }}
+            modules={modules}
           />
           <TextField
             type="file"

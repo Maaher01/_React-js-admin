@@ -73,6 +73,11 @@ const navConfig = [
     icon: icon('ic_country'),
   },
   {
+    title: 'Counters',
+    path: '/counter',
+    icon: icon('ic_counter'),
+  },
+  {
     title: 'License Info',
     path: '/license',
     icon: icon('ic_license'),
